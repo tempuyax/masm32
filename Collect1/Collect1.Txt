@@ -1,0 +1,81 @@
+    ; cara membaca data obj yg di warisi,jika pointer tidak tersedia dari 3 level object
+    mov ecx, [esi].pOwner
+    mov ebx, [ecx].MyClientWnd.pOwner
+    dec [ebx].DemoApp10.ClientWnd.dChildCount
+
+    
+    ; cara membaca data obj yg di warisi, jika pointer sudah tersedia dari 3 level object
+    mov ecx, pClientCollection
+    mov ebx, [ecx].Collection.pOwner
+    DbgDec [ebx].Collection.dCount
+    DbgDec [ebx].Collection.dLimit
+    DbgDec [ebx].Collection.dDelta
+
+
+
+    Kedua cara CALL di bawah ini memiliki fungsi sama. Cara penulisan saja yang
+    sedikit berbeda. yang pertama adalah call langsung ke procedure. sementara 
+    yang bagian kedua adalah call methode object, yg sebelum nya methode sudah 
+    dibuat. lihat dibawah;
+
+    ; call via procedure
+    invoke SearchPhone, pClientCollection, $OfsDStr("(406)") 
+
+    ; call via call methode object
+    OCall pClientCollection::ClientCollection.SearchPhone, pClientCollection, $OfsDStr("(406)") 
+    
+    ; sebelumnya sdh di tulis methode yg di call
+	Method ClientCollection.SearchPhone, uses esi, pCollect:Pointer, PhoneToFind:Pointer
+	    SetObject esi
+	    
+	    m2m [esi].PhoneToFind, $invoke(StrNew, PhoneToFind)
+	    invoke SearchPhone, pCollect, [esi].PhoneToFind
+	    invoke StrDispose, [esi].PhoneToFind
+	  
+	MethodEnd
+    
+
+
+CATATAN: Tentang OOP
+
+Jika Sebuah Object memiliki metode Abstrak, itu artinya object dapat 
+memanggil metode-metode object turunannya.
+jadi object yang kita warisi, hanya dapat memanggil metode turunan 
+jika metodenya tertulis di daftar  struktur nya.!!!
+dan object itu sendiri memanggil turunan dengan NO ID nya. Maka noID
+tidak boleh sama pd setiap object.
+
+
+
+
+    mov pClient1, $New(Client, Init,"91-100", "Anders, Smitty", "(406) 111-2222")
+    mov pClient2, $New(Client, Init,"90-167", "Smith, Zelda", "(800) 555-1212")
+    mov pClient3, $New(Client, Init,"90-177", "Smitty, John", "(406) 987-4321")
+    mov pClient4, $New(Client, Init,"90-160", "Johnson, Agatha", "(302) 139-8913")
+    mov pClient5, $New(Client, Init,"92-120", "Rudy, Mark", "(501) 129-3941")
+ 
+    mov pMemoryStream, $New(MemoryStream, Init, esi, 50, 20, 1024*2)
+    OCall pMemoryStream::MemoryStream.BinRead, eax, ; akan memanggil methode Store yg berada di pointer pClient1 
+    OCall pMemoryStream::MemoryStream.Put, pClient2 
+    OCall pMemoryStream::MemoryStream.Put, pClient3
+    OCall pMemoryStream::MemoryStream.Put, pClient4
+    OCall pMemoryStream::MemoryStream.Put, pClient5
+ 
+    ;Destroy is Automatic Done
+    Destroy pClient1                                ;Invokes RectangleShape's Done and disposes it
+
+
+
+; Hubunganm dengan PutItem dan GetItem
+
+Method Client.Load, uses esi, pStream:Pointer, pOwner:Pointer
+    OCall pStream::Stream.StrRead
+MethodEnd eax
+
+Method Client.Store, uses esi, pStream:Pointer
+    OCall pStream::Stream.StrWrite, eax
+MethodEnd
+
+   	mov edx, $OCall([esi].pIniFile::IniFile.KeyGetStr,, addr SecCORNER, addr KeynTopLftWidth)
+    invoke lstrlen, eax
+	OCall pMemoryStream::MemoryStream.BinWrite, edx, eax 

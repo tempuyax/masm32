@@ -1,0 +1,118 @@
+[Project]
+Assembler=masm
+Type=Win32 App
+Description=tes
+Backup=$P\Bak\
+Group=1
+GroupExpand=1
+Debug=0
+[Files]
+1=Collect.Asm
+2=Collect.Inc
+3=Collect.Txt
+[MakeFiles]
+0=Collelct.rap
+1=Collelct.rc
+2=Collect.Asm
+3=Collect.obj
+4=Collelct.res
+5=Collect.exe
+6=Collelct.def
+7=Collelct.dll
+8=Collelct.txt
+9=Collelct.lib
+10=Collelct.mak
+11=Collelct.hla
+12=Collelct.com
+13=Collelct.ocx
+14=Collelct.idl
+15=Collelct.tlb
+16=Collelct.sys
+[MakeDef]
+Menu=0,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0
+1=4,O,$B\RC.EXE /v,1
+2=3,O,$B\ML.EXE /c /coff /Cp /nologo /I"$I",2
+3=5,O,$B\LINK.EXE /SUBSYSTEM:WINDOWS /RELEASE /VERSION:4.0 /LIBPATH:"$L" /OUT:"$5",3
+4=0,0,,5
+5=rsrc.obj,O,$B\CVTRES.EXE,rsrc.res
+6=*.obj,O,$B\ML.EXE /c /coff /Cp /nologo /I"$I",*.asm
+7=0,0,"$E\OllyDbg",5
+11=4,O,$B\RC.EXE /v,1
+12=3,O,$B\ML.EXE /c /coff /Cp /Zi /nologo /I"$I",2
+13=5,O,$B\LINK.EXE /SUBSYSTEM:WINDOWS /DEBUG /VERSION:4.0 /LIBPATH:"$L" /OUT:"$5",3,4
+14=0,0,,5
+15=rsrc.obj,O,$B\CVTRES.EXE,rsrc.res
+16=*.obj,O,$B\ML.EXE /c /coff /Cp /nologo /I"$I",*.asm
+17=0,0,"$E\OllyDbg",5
+[Group]
+Group=Added files,Assembly,Resources,Misc,Modules
+1=2
+2=2
+3=4
+[Collapse]
+1=
+2=
+3=
+[Size]
+1=0,0,0,0,3057
+2=0,0,0,0,1486
+3=0,0,0,0,1778
+[VersionControl]
+Settings=1246
+Milestones=129
+MilestoneEvery=10
+MilestoneEveryCurrent=0
+MilestoneOnBuild=0.0.0.0
+MilestoneOnTime=2
+MilestoneOnDate=0
+MilestoneOnDateWhen=1
+MilestoneOnDateStatus=0
+MilestoneOnDateDate=8
+MilestoneOnDateTimeYear=2020
+MilestoneOnDateTimeMonth=4
+MilestoneOnDateTimeDate=26
+MilestoneOnDateTimeHour=15
+MilestoneOnDateTimeMin=3
+MilestoneOnDateTimeSec=9
+MilestoneOnDateTimeStatus=0
+BackupLocation=d:\Masm32\ObjAsm32\Projects\VCBackups\
+CompressionLevel=0
+DefaultComment=Project $N, $Z, Backup Created On $D At $T.
+ExcludeExt1=\
+ExcludeExt2=\
+ExcludeExt3=\
+ExcludeExt4=\
+FileVerLength=4
+FileVer2Range=0
+FileVer3Range=0
+FileVer4Range=0
+ProductVerLength=4
+ProductVer2Range=0
+ProductVer3Range=0
+ProductVer4Range=0
+[Colref]
+0=00FFFFFF
+1=00FFFFFF
+2=00FFFFFF
+3=00FFFFFF
+4=00FFFFFF
+5=00FFFFFF
+6=00FFFFFF
+7=00FFFFFF
+[BookMark]
+0=
+1=
+2=
+3=
+4=
+5=
+6=
+7=
+8=
+9=
+[BreakPoint]
+0=
+[Find]
+1="collection"
+2="GetCount"
+3="pDest"
