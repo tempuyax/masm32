@@ -1,1 +1,2 @@
 ini adalah program masm32
+menggunakan ObjAsm32
