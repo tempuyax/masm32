@@ -1,0 +1,4 @@
+#define MaskSkinbmp						100
+#define Skinbmp							101
+MaskSkinbmp				BITMAP    DISCARDABLE "Res/MaskMiliter.bmp"
+Skinbmp					BITMAP    DISCARDABLE "Res/Militer.bmp"

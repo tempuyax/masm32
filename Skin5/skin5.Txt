@@ -1,0 +1,177 @@
+HDC hdc;
+HBITMAP hbmp;
+HBRUSH hbr, hbrPrevious;
+RECT rc;
+
+int aZigzag[] = { 0xFF, 0xF7, 0xEB, 0xDD, 0xBE, 0x7F, 0xFF, 0xFF };
+
+hbmp = CreateBitmap(8, 8, 1, 1, aZigzag);
+hbr = CreatePatternBrush(hbmp);
+
+hdc = GetDC(hwnd);
+UnrealizeObject(hbr);
+hbrPrevious = SelectObject(hdc, hbr);
+GetClientRect(hwnd, &rc);
+
+PatBlt(hdc, rc.left, rc.top,
+    rc.right - rc.left, rc.bottom - rc.top, PATCOPY);
+
+SelectObject(hdc, hbrPrevious);
+ReleaseDC(hwnd, hdc);
+
+DeleteObject(hbr);
+DeleteObject(hbmp);
+
+
+rc:pointer
+
+hbmp = PartBitmap , hdcSrc, bmWidth, bmHeight
+hbr = CreatePatternBrush(hbmp);
+UnrealizeObject(hbr);
+hbrPrevious = SelectObject(hdc, hbr);
+PatBlt(hdc, 0, 0,
+    rc.right - rc.left, rc.bottom - rc.top, PATCOPY);
+SelectObject(hdc, hbrPrevious);
+DeleteObject(hbr);
+DeleteObject(hbmp);
+
+
+; ——————————————————————————————————————————————————————————————————————————————————————————————————
+; Method:    SkinRegion.CrtRegionFromMask
+; Purpose:   
+; Arguments: Arg1: 
+;            Arg2: 
+;            Arg3: 
+;            Arg4: 
+; Return:    
+; Note:      
+
+Method SkinRegion.CrtRegionFromMask, uses esi, nObj:dword, hdcMaskBmp:Handle, ObjRgn:Pointer 
+ 	LOCAL hDC:Handle
+	LOCAL hdcObjBmp:Handle
+	LOCAL hOldObjBmp:Handle
+    SetObject esi
+
+	;Menyiapkam memori
+    mov hDC, $invoke(GetDC, 0)
+    mov hdcObjBmp, $invoke(CreateCompatibleDC, hDC)
+    invoke ReleaseDC, 0, hDC
+
+	;Membuat BITMAP
+    .if nObj == TOPLEFT
+    	invoke CreateCompatibleBitmap, hdcObjBmp,[esi].sSkinData.TopLft.ObjSize.x, [esi].sSkinData.TopLft.ObjSize.y
+    .elseif nObj == TOPRIGHT
+    	invoke CreateCompatibleBitmap, hdcObjBmp,[esi].sSkinData.TopRgt.ObjSize.x, [esi].sSkinData.TopRgt.ObjSize.y
+    .elseif nObj == BOTTOMLEFT
+    	invoke CreateCompatibleBitmap, hdcObjBmp,[esi].sSkinData.BotLft.ObjSize.x, [esi].sSkinData.BotLft.ObjSize.y
+    .elseif nObj == BOTTOMRIGHT
+    	invoke CreateCompatibleBitmap, hdcObjBmp,[esi].sSkinData.BotRgt.ObjSize.x, [esi].sSkinData.BotRgt.ObjSize.y
+	.elseif nObj == TOPFRAME
+	    ;========================================================
+		;Menghapus Dinamik Object Region. !Awas Sangat bermasalah
+		mov eax, ObjRgn
+		mov eax,[eax]
+		.if eax
+			invoke DeleteObject, eax
+		.endif
+	    invoke CreateCompatibleBitmap,hdcObjBmp,[esi].sSkinData.TopFrame.CurSize.x,[esi].sSkinData.TopFrame.CurSize.y
+    .elseif nObj == LEFTFRAME
+	    ;========================================================
+		;Menghapus Dinamik Object Region. !Awas Sangat bermasalah
+		mov eax, ObjRgn
+		mov eax,[eax]
+		.if eax
+			invoke DeleteObject, eax
+		.endif
+	    invoke CreateCompatibleBitmap,hdcObjBmp,[esi].sSkinData.LeftFrame.CurSize.x,[esi].sSkinData.LeftFrame.CurSize.y
+    .elseif nObj == BOTTOMFRAME
+	    ;========================================================
+		;Menghapus Dinamik Object Region. !Awas Sangat bermasalah
+		mov eax, ObjRgn
+		mov eax,[eax]
+		.if eax
+			invoke DeleteObject, eax
+		.endif
+	    invoke CreateCompatibleBitmap,hdcObjBmp,[esi].sSkinData.BottomFrame.CurSize.x,[esi].sSkinData.BottomFrame.CurSize.y
+    .elseif nObj == RIGHTFRAME
+	    ;========================================================
+		;Menghapus Dinamik Object Region. !Awas Sangat bermasalah
+		mov eax, ObjRgn
+		mov eax,[eax]
+		.if eax
+			invoke DeleteObject, eax
+		.endif
+	    invoke CreateCompatibleBitmap,hdcObjBmp,[esi].sSkinData.RightFrame.CurSize.x,[esi].sSkinData.RightFrame.CurSize.y
+    .endif
+
+;	;menghubungkan memori ke OBJECT BITMAP
+    push eax
+    mov hOldObjBmp, $invoke(SelectObject, hdcObjBmp, eax)
+
+;	;Transfer warna antar memori ke OBJECT BITMAP
+    .if nObj == TOPLEFT
+	    invoke BitBlt, hdcObjBmp, 
+	    0, 0, [esi].sSkinData.TopLft.ObjSize.x, [esi].sSkinData.TopLft.ObjSize.y, 
+	    hdcMaskBmp, 
+	    [esi].sSkinData.TopLft.ObjPt.x, [esi].sSkinData.TopLft.ObjPt.y, SRCCOPY
+    .elseif nObj == TOPRIGHT
+	    invoke BitBlt, hdcObjBmp, 
+	    0, 0, [esi].sSkinData.TopRgt.ObjSize.x, [esi].sSkinData.TopRgt.ObjSize.y, 
+	    hdcMaskBmp, 
+	    [esi].sSkinData.TopRgt.ObjPt.x, [esi].sSkinData.TopRgt.ObjPt.y, SRCCOPY
+    .elseif nObj == BOTTOMLEFT
+	    invoke BitBlt, hdcObjBmp, 
+	    0, 0, [esi].sSkinData.BotLft.ObjSize.x, [esi].sSkinData.BotLft.ObjSize.y, 
+	    hdcMaskBmp, 
+	    [esi].sSkinData.BotLft.ObjPt.x, [esi].sSkinData.BotLft.ObjPt.y, SRCCOPY
+    .elseif nObj == BOTTOMRIGHT
+	    invoke BitBlt, hdcObjBmp, 
+	    0, 0, [esi].sSkinData.BotRgt.ObjSize.x, [esi].sSkinData.BotRgt.ObjSize.y, 
+	    hdcMaskBmp, 
+	    [esi].sSkinData.BotRgt.ObjPt.x, [esi].sSkinData.BotRgt.ObjPt.y, SRCCOPY
+	.elseif nObj == TOPFRAME
+	    invoke StretchBlt, hdcObjBmp,                  \;mengisi warna mask ke memori
+	    0, 0, [esi].sSkinData.TopFrame.CurSize.x,[esi].sSkinData.TopFrame.CurSize.y, \;tujuan 0,0 dgn lebar sekarang dan tinggi constant
+	    hdcMaskBmp, 
+	    [esi].sSkinData.TopFrame.ObjPt.x,[esi].sSkinData.TopFrame.ObjPt.y,
+	    1,[esi].sSkinData.TopFrame.CurSize.y, SRCCOPY
+    .elseif nObj == LEFTFRAME
+	    invoke StretchBlt, hdcObjBmp,                  \;mengisi warna mask ke memori
+	    0, 0, [esi].sSkinData.LeftFrame.CurSize.x,[esi].sSkinData.LeftFrame.CurSize.y, \;tujuan 0,0 dgn lebar sekarang dan tinggi constant
+	    hdcMaskBmp, 
+	    [esi].sSkinData.LeftFrame.ObjPt.x,[esi].sSkinData.LeftFrame.ObjPt.y,
+	    [esi].sSkinData.LeftFrame.CurSize.x,1, SRCCOPY
+    .elseif nObj == BOTTOMFRAME
+	    invoke StretchBlt, hdcObjBmp, 
+	    0, 0, [esi].sSkinData.BottomFrame.CurSize.x,[esi].sSkinData.BottomFrame.CurSize.y,
+	    hdcMaskBmp, 
+	    [esi].sSkinData.BottomFrame.ObjPt.x,[esi].sSkinData.BottomFrame.ObjPt.y,
+	    1,[esi].sSkinData.BottomFrame.CurSize.y, SRCCOPY
+   .elseif nObj == RIGHTFRAME
+	    invoke StretchBlt, hdcObjBmp,                  
+	    0, 0, [esi].sSkinData.RightFrame.CurSize.x,[esi].sSkinData.RightFrame.CurSize.y, 
+	    hdcMaskBmp, 
+	    [esi].sSkinData.RightFrame.ObjPt.x,[esi].sSkinData.RightFrame.ObjPt.y,
+	    [esi].sSkinData.RightFrame.CurSize.x,1, SRCCOPY
+    .endif
+
+	;=====================
+    ;proses membuat region
+    pop eax
+    invoke Bmp2Rgn, eax, $RGB(0,0,0); warna hitam menjadi region
+
+    ;simpan hasil region ke pointer ObjRgn 
+    mov ecx, ObjRgn
+    mov [ecx], eax
+    
+    ;Hapus Object Bitmap	
+	Invoke DeleteObject, $invoke(SelectObject, hdcObjBmp, hOldObjBmp)
+	
+	;===============
+    ;Bebaskan memori	
+	Invoke DeleteDC, hdcObjBmp
+   
+MethodEnd 
+
+Menu Bar 22
+ToolBar 24
