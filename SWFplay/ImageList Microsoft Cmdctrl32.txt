@@ -1,0 +1,79 @@
+The ImageList_LoadImage function creates an image list from the specified bitmap, cursor, or icon resource.
+
+HIMAGELIST ImageList_LoadImage(
+
+    HINSTANCE hi, 	
+    LPCSTR lpbmp, 	
+    int cx, 	
+    int cGrow, 	
+    COLORREF crMask, 	
+    UINT uType, 	
+    UINT uFlags	
+   );	
+ 
+
+Parameters
+
+hi 
+
+Handle to the instance that contains the resource. 
+If the hi parameter is zero, the low-order word of this parameter must be the identifier of the OEM image to load. The OEM image identifiers are defined in WINUSER.H. Following are the identifier prefixes and their meanings:
+
+Prefix	Meaning
+OBM_	OEM bitmaps
+OIC_	OEM icons
+OCR_	OEM cursors
+ 
+
+lpbmsp
+
+Pointer to a null-terminated string that contains the name of the image to load. 
+If the uFlags parameter specifies the LR_LOADFROMFILE value, the lpbmp parameter must be the name of the file that contains the image. 
+
+cx
+
+Width of each image. The height of each image and the initial number of images are inferred by the dimensions of the specified resource.
+
+cGrow
+
+Amount of images by which the image list can grow when the system needs to resize the list to make room for new images. This parameter represents the number of new images that the resized image list can contain.
+
+crMask
+
+Color used to generate a mask. Each pixel of this color in the specified bitmap, cursor, or icon is changed to black, and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
+
+uType
+
+Flag that specifies the type of image to load. This parameter can be one of the following values:
+
+Value	Meaning
+IMAGE_BITMAP	Loads a bitmap.
+IMAGE_CURSOR	Loads a cursor.
+IMAsssGE_ICON	Loads an icon.
+ 
+
+uFlags
+
+Flags that specify how to load the image. This parameter can be a combination of the following values:
+
+Value	Meaning
+LR_DEFAULTCOLOR	Uses the color format of the display.
+LR_LOADDEFAULTSIZE	Uses the width or height specified by the system metric values for cursors and icons if the cx parameter is set to zero. If this value is not specified and cx is set to zero, the function sets the size to that specified in the resource. If the resource contains multiple images, the function sets the size to that of the first image. 
+LR_LOADFROMFILE	Loads the image from the file specified by the lpbmp parameter.
+LR_LOADMAP3DCOLORS	Searches the color table for the image and replaces the following shades of gray with the corresponding three-dimensional color:
+ 
+
+Dk Gray,RGB(128, 128, 128)	COLOR_3DSHADOW
+Gray, RGB(192, 192, 192)	COLOR_3DFACE
+Lt Gray, RGB(223, 223, 223)	COLOR_3DLIGHT
+ 
+
+LR_LOADTRANSPARENT	Retrieves the color value of the first pixel in the image and replaces the corresponding entry in the color table with the default window color (the COLOR_WINDOW display color). All pixels in the image that use that entry become the default window value color. This value applies only to images that have corresponding color tables. 
+LR_MONOCHROME	Loads the image in black and white.
+LR_SHARED	Shares the image handle if the image is loaded multiple times. Do not use this value for images that have nontraditional sizes that might change after loading or for images that are loaded from a file. 
+ 
+
+Return Values
+
+If the function succeeds, the return value is the handle of the image list.
+If the function fails, the return value is NULL.

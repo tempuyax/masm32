@@ -1,0 +1,262 @@
+szBksl          db "\",0
+szHeader        db '<style type="text/css">',13,10
+                db 'body {',13,10
+	            db 'margin:0px;',13,10
+	            db '}',13,10	
+	            db 'td {',13,10
+	            db 'font:11px arial;',13,10
+	            db 'color:#99CCFF;',13,10
+	            db '}',13,10
+	            db '</style>',13,10
+	            db '<body bgcolor="#14285f">',13,10
+	            db '<object class="video" width="435" height="299" type="application/x-shockwave-flash" data="flvplayer.fla">',13,10,0
+szFlvFile	    db '<param name="flashvars" value="file=%s" />',0
+szFooter	    db '<param name="movie" value="flvplayer.fla" />',13,10
+	            db '<embed src="flvplayer.fla" width="435" height="299" bgcolor="#FFFFFF" type="application/x-shockwave-flash" />',13,10
+	            db '</object>',0
+szReturnLine    db 0Dh,0Ah
+FilterString    db "Target (*.swf)",0,"*.swf",0,0
+ErrorMsgTitle   db "Error",0
+OpenError       db "Cannot open flv-file!",0
+ofn             OPENFILENAME <>
+OfnTitle        db "Select the flv file",0
+
+include flvplayer.inc
+szflvplayer     db "flvplayer.fla",0
+
+
+
+
+
+; Jika File *.lib tidak ada, Maka bisa memanggil fungsi dengan "LoadLibrary"
+; setelah itu di CALL,...contoh di bawah
+szDLL			db	"atl.dll",0
+szAtlAxWinInit  db	"AtlAxWinInit",0
+
+       invoke LoadLibrary,offset szDLL
+	       mov hLib,eax
+	       invoke GetProcAddress,hLib,addr szAtlAxWinInit
+	       call eax   
+
+
+WM_CTLCOLORBTN
+WM_CTLCOLORDLG
+WM_CTLCOLOREDIT
+WM_CTLCOLORLISTBOX	
+WM_CTLCOLORMSGBOX
+WM_CTLCOLORSCROLLBAR
+WM_CTLCOLORSTATIC
+
+
+The largest possible file for a FAT32 drive is 4GB minus 2 bytes. Win32-based applications can open files this large without special handling. However, non-Win32 applications must use Int 21h Function 6Ch (FAT32) with the EXTENDED_SIZE flag. 
+
+The FAT32 file system includes four bytes per cluster within the file allocation table. This differs from the FAT16 file system, which contains 2 bytes per cluster, and the FAT12 file system, which contains 1.5 bytes per cluster within the file allocation table. 
+Note that the high 4 bits of the 32-bit values in the FAT32 file allocation table are reserved and are not part of the cluster number. Applications that directly read a FAT32 file allocation table must mask off these bits and preserve them when writing new values. 
+
+File System Cluster Limits: 
+
+System	Cluster Limit 
+FAT12	The count of data clusters is less than 4087 clusters. 
+FAT16	The count of data clusters is between 4087 and 65526 clusters, inclusive. 
+FAT32	The count of data clusters is greater than 65526 clusters. 
+
+The following are all the valid partition types and their corresponding values for use in the Part_FileSystem member of the s_partition (FAT32) structure. 
+
+Partition Types 
+
+Value 	Description 
+PART_UNKNOWN(00h) 	Unknown
+PART_DOS2_FAT(01h) 	12-bit FAT
+PART_DOS3_FAT(04h) 	16-bit FAT. Partitions smaller than 32MB. 
+PART_EXTENDED(05h) 	Extended MS-DOS Partition
+PART_DOS4_FAT(06h) 	16-bit FAT. Partitions larger than or equal to 32MB. 
+PART_DOS32(0Bh) 	32-bit FAT. Partitions up to 2047GB. 
+PART_DOS32X(0Ch) 	Same as PART_DOS32(0Bh), but uses Logical Block Address Int 13h extensions. 
+PART_DOSX13(0Eh) 	Same as PART_DOS4_FAT(06h), but uses Logical Block Address Int 13h extensions. 
+PART_DOSX13X(0Fh) 	Same as PART_EXTENDED(05h), but uses Logical Block Address Int 13h extensions. 
+
+The following functions have limitations on FAT32 media: 
+
+File Control Block Functions 
+The open and create functions will only work for creating a volume label on a FAT32 drive. However, FCB Find_First/Next, Delete, and Rename will work and will return the entire 32-byte directory entry on FAT32 media. 
+Handle-Based File Write Functions 
+Win32-based applications can extend a file to a size greater than 2GB minus 1byte without special handling. However, non-Win32 applications must open such files with Int 21h Function 6Ch (FAT32) specifying the EXTENDED_SIZE flag. If not, write functions will fail and ERROR_ACCESS_DENIED (0005h) will be returned. 
+Handle-Based File Open and Create Functions 
+Win32-based applications can open files larger than 2GB minus 1byte in size without special handling. Non-Win32-based applications must open such files with Int 21h Function 6Ch (FAT32) specifying the EXTENDED_SIZE flag. However, using an old style create to truncate a file will not fail. 
+
+The FAT32 file system supports the following new Int 21h functions and updated IOCTL functions.
+
+New Int 21h Functions
+
+Several new interrupt 21h functions were implemented to support FAT32 media. These additions are effective for Windows 95 OEM Service Release 2 and later. 
+The new Interrupt 21h Function 730X functions can be called using the DeviceIoControl function. DeviceIoControl has been updated to support VWIN32_DIOC_DOS_DRIVEINFO, a new control code for Interrupt 21h Function 730X functions. 
+For more information, see Using VWIN32 to Carry Out MS-DOS Functions. 
+
+The following new interrupt 21h functions have been implemented:
+Int21h Function 7302h Get_ExtDPB (FAT32)
+Int21h Function 7303h Get_ExtFreeSpace (FAT32)
+Int21h Function 7304h Set_DPBForFormat (FAT32)
+SetDPB_SetAllocInfo (FAT32)
+SetDPB_SetDPBFrmBPB (FAT32)
+SetDPB_ForceMediaChng (FAT32)
+SetDPB_GetSetActFATandMirr (FAT32)
+SetDPB_GetSetRootDirClus (FAT32)
+Int21h Function 7305h Ext_ABSDiskReadWrite (FAT32)
+
+ 
+
+Updated IOCTL Functions
+
+All IOCTL functions have been modified to accept a new device category value (CH = 48h) for FAT32 drives. These changes are effective for Windows 95 OEM Service Release 2 and later. 
+Most of the 08h and 48h forms of each function accept identical parameters. In some cases, the two forms of the call (48h and 08h) are interchangeable. However, this is not always true. As a result, applications that call the 48h form of the function must be prepared to fall back on the 08h form, in case of failure. Please refer to each specific function for information regarding these values. 
+
+Set Device Parameters	Int 21h Function 440Dh Minor Code 40h (FAT32) 
+Write Track on Logical Drive	Int 21h Function 440Dh Minor Code 41h (FAT32) 
+Format Track on Logical Drive	Int 21h Function 440Dh Minor Code 42h (FAT32) 
+Set Media ID	Int 21h Function 440Dh Minor Code 46h (FAT32) 
+Set Access Flag	Int 21h Function 440Dh Minor Code 47h (FAT32) 
+Lock/Unlock Removable Media	Int 21h Function 440Dh Minor Code 48h (FAT32) 
+Eject Removable Media	Int 21h Function 440Dh Minor Code 49h (FAT32) 
+Lock Logical Volume	Int 21h Function 440Dh Minor Code 4Ah (FAT32) 
+Lock Physical Volume	Int 21h Function 440Dh Minor Code 4Bh (FAT32) 
+Get Device Parameters	Int 21h Function 440Dh Minor Code 60h (FAT32) 
+Read Track on Logical Drive	Int 21h Function 440Dh Minor Code 61h (FAT32) 
+Verify Track on Logical Drive	Int 21h Function 440Dh Minor Code 62h (FAT32) 
+Get Media ID	Int 21h Function 440Dh Minor Code 66h (FAT32) 
+Get Access Flag	Int 21h Function 440Dh Minor Code 67h (FAT32) 
+Sense Media Type	Int 21h Function 440Dh Minor Code 68h (FAT32) 
+Unlock Logical Volume	Int 21h Function 440Dh Minor Code 6Ah (FAT32) 
+Unlock Physical Volume	Int 21h Function 440Dh Minor Code 6Bh (FAT32) 
+Get Lock Flag State	Int 21h Function 440Dh Minor Code 6Ch (FAT32) 
+Enumerate Open Files	Int 21h Function 440Dh Minor Code 6Dh (FAT32) 
+Find Swap File	Int 21h Function 440Dh Minor Code 6Eh (FAT32) 
+Get Drive Map Info	Int 21h Function 440Dh Minor Code 6Fh (FAT32) 
+Get Lock Level	Int 21h Function 440Dh Minor Code 70h (FAT32)
+Get First Cluster	Int 21h Function 440Dh Minor Code 71h (FAT32)    
+
+
+With the addition of the FAT32 file system, the BPB, DPB, and DEVICEPARAMS structures were updated to accommodate FAT32 information. Additionally, subordinate structures have been implemented to support the FAT32 file system main structures. These changes are effective for Windows OEM Service Release 2 and later. 
+
+BPB (FAT32)
+BIGFATBOOTFSINFO (FAT32)
+DPB (FAT32)
+EA_DEVICEPARAMETERS (FAT32)
+ExtGetDskFreSpcStruc (FAT32)
+s_partition (FAT32)
+SDPDFormatStruc (FAT32)
+ 
+
+Note:  Many data structures in this document are listed as reserved. This indicates that the user is not to assume or modify the values within these fields. They are used by the file system itself and are not available for any enhancements. 
+
+stc            ; set carry for error flag
+               ; set registers here for LFN function call
+int 21h        ; call long filename function
+jnc success    ; call succeeded, continue processing
+cmp ax, 7100h  ; is call really not supported?
+jne failure    ; supported, but error occurred
+               ; set registers here for MS-DOS function call
+int 21h        ; call standard MS-DOS function
+
+
+Win32-based applications can preserve the last access date by using the GetFileTime and SetFileTime functions.
+Applications written for MS-DOS or Windows version 3. x can use Get Last Access Date and Time 
+(Interrupt 21h Function 5704h) and Set Last Access Date and Time (Interrupt 21h Function 5705h), 
+or they can open the file with Create or Open File (Interrupt 21h Function 716Ch) using the OPEN_ACCESS_RO_NOMODLASTACCESS (0004h) 
+access mode.
+
+he long filename functions match the following Win32 file management functions. 
+
+Long filename function	Win32 function
+Interrupt 21h Function 5704h
+Get Last Access Date and Time	GetFileTime
+Interrupt 21h Function 5705h
+Set Last Access Date and Time	SetFileTime
+Interrupt 21h Function 5706h
+Get Creation Date and Time	GetFileTime
+Interrupt 21h Function 5707h
+Set Creation Date and Time	SetFileTime
+Interrupt 21h Function 7139h
+Make Directory	CreateDirectory
+Interrupt 21h Function 713Ah
+Remove Directory	RemoveDirectory
+Interrupt 21h Function 713Bh
+Change Directory	SetCurrentDirectory
+Interrupt 21h Function 7141h
+Delete File	DeleteFile
+Interrupt 21h Function 7143h
+Get or Set File Attributes	GetFileAttributes, SetFileAttributes
+Interrupt 21h Function 7147h
+Get Current Directory	GetCurrentDirectory
+Interrupt 21h Function 714Eh
+Find First File	FindFirstFile
+Interrupt 21h Function 714Fh
+Find Next File	FindNextFile
+Interrupt 21h Function 7156h
+Rename File	MoveFile
+Interrupt 21h Function 7160h Minor Code 0h
+Get Full Path Name	GetFullPathName
+Interrupt 21h Function 7160h Minor Code 1h
+Get Short Path Name	GetShortPathName
+Interrupt 21h Function 7160h Minor Code 2h
+Get Long Path Name	No Win32 function equivalent
+Interrupt 21h Function 716Ch
+Create or Open File	CreateFile, OpenFile
+Interrupt 21h Function 71A0h
+Get Volume Information	GetVolumeInformation
+Interrupt 21h Function 71A1h
+Find Close	FindClose
+Interrupt 21h Function 71A6h
+Get File Info By Handle	GetFileInformationByHandle
+Interrupt 21h Function 71A7h Minor Code 0h 
+File Time To DOS Time	FileTimeToDOSDateTime
+Interrupt 21h Function 71A7h Minor Code 1h 
+DOS Time To File Time	DOSDateTimeToFileTime
+Interrupt 21h Function 71A8h
+Generate Short Name	No Win32 function equivalent
+Interrupt 21h Function 71A9h
+Server Create or Open File	No Win32 function equivalent
+Interrupt 21h Function 71AAh Minor Code 0h
+Create Subst	No Win32 function equivalent
+Interrupt 21h Function 71AAh Minor Code 1h
+Terminate Subst	No Win32 function equivalent
+Interrupt 21h Function 71AAh Minor Code 2h
+Query Subst	No Win32 function equivalent
+ 
+
+Note that Interrupt 21h Functions 71A2h through 71A5h exist, but they are for internal use by Windows 95 only 
+
+
+Locks or unlocks the volume in the given drive (preventing or permitting its removal) or returns the locked status of the given drive. 
+Interrupt 21h Function 440Dh Minor Code 48h
+mov ax, 440Dh           ; generic IOCTL
+mov bx, DriveNum        ; see below  
+mov ch, 8               ; device category
+mov cl, 48h             ; Lock or Unlock Removable Media
+mov dx, seg ParamBlock  ; see below
+mov ds, dx
+mov dx, offset ParamBlock
+int 21h
+
+jc  error
+
+
+Parameters
+
+DriveNum
+
+Drive to lock or unlock. This parameter can be 0 for default drive, 1 for A, 2 for B, and so on.
+
+ParamBlock
+
+Address of a PARAMBLOCK structure that specifies the operation to carry out and receives a count of the number of locks on the drive. 
+
+ 
+
+Return Value
+
+Clears the carry flag and copies the number of pending locks on the given drive to the NumLocks member of the PARAMBLOCK structure if successful. Otherwise, the function sets the carry flag and sets the AX register to one of the following error values:
+
+01h	The function is not supported.
+B0h	The volume is not locked in the drive.
+B2h	The volume is not removable.
+B4h	The lock count has been exceeded.

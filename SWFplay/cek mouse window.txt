@@ -1,0 +1,237 @@
+Mengambil data stack saat pengiriman pesan windows
+    Switch uMsg
+      case WM_NCLBUTTONDBLCLK
+        movzx ecx, WORD PTR [ebp+20] ;LOWORD(lParam)
+        movzx edx, WORD PTR [ebp+22] ;HIWORD(lParam)
+
+        mov pt.x, ecx  ;index stack 20 /16bit
+        mov pt.y, edx  ;index stack 22 /16bit
+
+      case WM_NCHITTEST
+        push esi
+        push edi
+
+
+WM_NCHITTEST  
+xPos = LOWORD(lParam);  // horizontal position of cursor 
+yPos = HIWORD(lParam);  // vertical position of cursor 
+ 
+
+WM_NCRBUTTONDBLCLK  
+nHittest = (INT) wParam;    // hit-test value 
+pts = MAKEPOINTS(lParam);   // position of cursor
+
+melihat posisi kursor saat window di jalankan
+
+uMsg 
+WM_NCMOUSEMOVE  
+nHittest = (INT) wParam;    // hit-test value 
+pts = MAKEPOINTS(lParam);   // position of cursor 
+
+
+Nilai yg diberikan nHittest
+
+dari DefWindowProc function mengikuti, indikasi "hot spot" posisi kursor : 
+
+Value	Location of hot spot
+HTBORDER	In the border of a window that does not have a sizing border
+HTBOTTOM	In the lower horizontal border of a window
+HTBOTTOMLEFT	In the lower-left corner of a window border
+HTBOTTOMRIGHT	In the lower-right corner of a window border
+HTCAPTION	In a title bar
+HTCLIENT	In a client area
+HTERROR	On the screen background or on a dividing line between windows (same as HTNOWHERE, except that the DefWindowProc function produces a system beep to indicate an error)
+HTGROWBOX	In a size box (same as HTSIZE)
+HTHSCROLL	In a horizontal scroll bar
+HTLEFT	In the left border of a window
+HTMENU	In a menu
+HTNOWHERE	On the screen background or on a dividing line between windows
+HTREDUCE	In a Minimize button
+HTRIGHT	In the right border of a window
+HTSIZE	In a size box (same as HTGROWBOX)
+HTSYSMENU	In a System menu or in a Close button in a child window
+HTTOP	In the upper horizontal border of a window
+HTTOPLEFT	In the upper-left corner of a window border
+HTTOPRIGHT	In the upper right corner of a window border
+HTTRANSPARENT	In a window currently covered by another window
+HTVSCROLL	In the vertical scroll bar
+HTZOOM	In a Maximize button
+
+Pada saat window ditampilkan pesan yg dapat di tangkap adalah: 
+uMsg
+WM_NCPAINT  
+hrgn = (HRGN) wParam;   // handle of update region 
+
+WM_PAINT  
+hdc = (HDC) wParam; // the device context to draw in
+
+An application sends the WM_ERASEBKGND message when the window background must be erased (for example, when a window is resized). The message is sent to prepare an invalidated portion of a window for painting. 
+WM_ERASEBKGND  
+hdc = (HDC) wParam; // handle of device context 
+
+WM_CTLCOLORBTN
+WM_CTLCOLORDLG
+WM_CTLCOLOREDIT
+WM_CTLCOLORLISTBOX	
+WM_CTLCOLORMSGBOX
+WM_CTLCOLORSCROLLBAR
+WM_CTLCOLORSTATIC
+
+#class standar windows
+Element	Purpose
+Class name	Distinguishes the class from other registered classes.
+Window-procedure address	Points to the function that processes all messages sent to windows in the class and defines the behavior of the window.
+Instance handle	Identifies the application or DLL that registered the class.
+Class cursor	Defines the mouse cursor that Windows displays for a window of the class.
+Class icon	Defines the large icon.
+Small class icon	Defines the small icon (Windows version 4.0 and higher).
+Class background brush	Defines the color and pattern that fill the client area when the window is opened or painted.
+Class menu	Specifies the default menu for windows that do not explicitly define a menu.
+Class styles	Defines how to update the window after moving or resizing it, how to process double-clicks of the mouse, how to allocate space for the device context, and other aspects of the window.
+Extra class memory	Specifies the amount of extra memory, in bytes, that Windows should reserve for the class. All windows in the class share the extra memory and can use it for any application-defined purpose. Windows initializes this memory to zero.
+Extra window memory	Specifies the amount of extra memory, in bytes, that Windows should reserve for each window belonging to the class. The extra memory can be used for any application-defined purpose. Windows initializes this memory to zero.
+
+#Propeties window
+#define BUFFER 4096  
+  
+HINSTANCE hinst;       // handle of current instance 
+HWND hwndSubclass;     // handle of a subclassed window 
+HANDLE hIcon, hCursor; 
+HGLOBAL hMem; 
+char *lpMem; 
+TCHAR tchPath[] = "c:\\winnt\\samples\\winprop.c"; 
+ 
+// Load resources. 
+ 
+hIcon = LoadIcon(hinst, MAKEINTRESOURCE(400)); 
+hCursor = LoadCursor(hinst, MAKEINTRESOURCE(220)); 
+ 
+// Allocate and fill a memory buffer. 
+ 
+hMem = GlobalAlloc(GPTR, BUFFER); 
+lpMem = GlobalLock(hMem); 
+
+lstrcpy(lpMem, tchPath); 
+GlobalUnlock(hMem); 
+ 
+// Set the window properties for hwndSubclass. 
+ 
+SetProp(hwndSubclass, "PROP_ICON", hIcon); 
+SetProp(hwndSubclass, "PROP_CURSOR", hCursor); 
+SetProp(hwndSubclass, "PROP_BUFFER", hMem); 
+
+#Mengambil Propeties windows
+#define PATHLENGTH 256  
+  
+HWND hwndSubclass;     // handle of a subclassed window 
+HANDLE hIconProp, hCursProp; 
+HGLOBAL hMemProp; 
+char *lpFilename; 
+TCHAR tchBuffer[PATHLENGTH]; 
+int nSize; 
+HDC hdc; 
+ 
+// Get the window properties, then use the data. 
+ 
+hIconProp = (HICON) GetProp(hwndSubclass, "PROP_ICON"); 
+TextOut(hdc, 10, 40, "PROP_ICON", 9); 
+DrawIcon(hdc, 90, 40, hIconProp); 
+ 
+hCursProp = (HCURSOR) GetProp(hwndSubclass, "PROP_CURSOR"); 
+TextOut(hdc, 10, 85, "PROP_CURSOR", 9); 
+
+DrawIcon(hdc, 110, 85, hCursProp); 
+ 
+hMemProp = (HGLOBAL) GetProp(hwndSubclass, "PROP_BUFFER"); 
+lpFilename = GlobalLock(hMemProp); 
+nSize = sprintf(tchBuffer, 
+    "Path to file:  %s", lpFilename); 
+TextOut(hdc, 10, 10, tchBuffer, nSize); 
+
+#melihat daftar propeties window
+EnumPropsEx(hwndSubclass, WinPropProc, NULL);  
+  
+// WinPropProc is an application-defined callback function 
+// that lists a window property. 
+ 
+BOOL CALLBACK WinPropProc( 
+    HWND hwndSubclass,  // handle of window with property 
+    LPCSTR lpszString,  // property string or atom 
+    HANDLE hData)       // data handle 
+{ 
+    static int nProp = 1;    // property counter 
+    TCHAR tchBuffer[BUFFER]; // expanded-string buffer 
+    int nSize;               // size of string in buffer 
+
+    HDC hdc;                 // device-context handle 
+ 
+    hdc = GetDC(hwndSubclass); 
+ 
+    // Display window property string in client area. 
+ 
+    nSize = sprintf(tchBuffer, "WinProp %d:  %s", nProp++, 
+        lpszString); 
+    TextOut(hdc, 10, nProp * 20, tchBuffer, nSize); 
+ 
+    ReleaseDC(hwndSubclass, hdc); 
+ 
+    return TRUE; 
+} 
+
+#menghapus window properties
+case WM_DESTROY:  
+  
+    EnumPropsEx(hwndSubclass, DelPropProc, NULL); 
+ 
+    PostQuitMessage(0); 
+    break; 
+ 
+// DelPropProc is an application-defined callback function 
+// that deletes a window property. 
+ 
+BOOL CALLBACK DelPropProc( 
+    HWND hwndSubclass,  // handle of window with property 
+    LPCSTR lpszString,  // property string or atom 
+    HANDLE hData)       // data handle 
+{ 
+    RemoveProp(hwndSubclass, lpszString); 
+ 
+    return TRUE; 
+}  
+
+#Membuat Header item
+The following messages, notification messages, and structures are associated with header controls. These elements can be grouped as follows.
+
+Size and Position
+
+HDM_LAYOUT
+HD_LAYOUT 
+
+Inserting and Deleting Items
+
+HDM_DELETEITEM
+HDM_INSERTITEM 
+
+Item Attributes
+
+HDM_SETITEM
+HDN_ITEMCHANGED
+HDN_ITEMCHANGINGHDN_TRACK
+
+Item Information
+
+HDM_GETITEM
+HDM_GETITEMCOUNT
+HDN_ITEMCLICK
+HDN_ITEMDBLCLICK
+HD_ITEM
+HD_NOTIFY  
+
+Divider Tracking
+
+HDN_BEGINTRACKHDN_DIVIDERDBLCLICKHDN_ENDTRACK
+
+Hit Testing
+
+HD_HITTESTINFO
+HDM_HITTEST

@@ -1,0 +1,20 @@
+Membuat file format
+
+HaderOfFile:
+	iSize: ukuran header 
+	iTag:  id pembuat
+        iver:  versi file
+	ifsize: ukuran tot file
+	inlayer: jml layer
+	
+LayerOfdata1:
+	size: ukuran header
+        id: identitas layer (image)
+	namer: nama layer 1
+	src:  format image 1
+        frame: jmlh frame	
+LayerOfdata2:	
+        id: identitas layer (region)
+	name: nama layer 1
+	src:  format image 1
+        frame: jmlh frame	

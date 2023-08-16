@@ -1,0 +1,104 @@
+ence
+	
+The Object Element
+« Previous 	Next Chapter »
+Beatles 	
+
+The object element supports many different media types, like:
+
+    *
+
+      Pictures
+    *
+
+      Sounds
+    *
+
+      Videos
+    *
+
+      Other Objects
+
+Displaying A Picture
+
+You can display a picture as an object:
+Example
+<object height="100%" width="100%"
+type="image/jpeg" data="audi.jpeg">
+</object>
+
+Try it yourself »
+
+Displaying A Web Page
+
+You can display a web page as an object:
+Example
+<object type="text/html" height="100%" width="100%"
+data="http://www.w3schools.com">
+</object>
+
+Try it yourself »
+
+Displaying A Sound
+
+You can display a sound as an object:
+Example
+<object
+classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95">
+<param name="FileName" value="liar.wav" />
+</object>
+
+Try it yourself »
+
+Displaying A Video
+
+You can display a video as an object:
+Example
+<object
+classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95">
+<param name="FileName" value="3d.wmv" />
+</object>
+
+Try it yourself »
+
+Displaying A Calendar
+
+You can display a calendar as an object:
+Example
+<object width="100%" height="80%"
+classid="clsid:8E27C92B-1264-101C-8A2F-040224009C02">
+<param name="BackColor" value="14544622">
+<param name="DayLength" value="1">
+</object>
+
+Try it yourself »
+
+Displaying Graphics
+
+You can display graphics as an object:
+Example
+<object width="200" height="200"
+classid="CLSID:369303C2-D7AC-11D0-89D5-00A0C90833E6">
+<param name="Line0001"
+value="setFillColor(255, 0, 255)">
+<param name="Line0002"
+value="Oval(-100, -50, 200, 100, 30)">
+</object>
+
+Try it yourself »
+
+Displaying Flash
+
+You can display a flash animation as an object:
+Example
+<object width="400" height="40"
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+codebase="http://fpdownload.macromedia.com/
+pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0">
+<param name="SRC" value="bookmark.swf">
+<embed src="bookmark.swf" width="400" height="40"></embed>
+</object>
+
+Try it yourself »
+
+Click here to try a fancy flash

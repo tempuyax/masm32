@@ -1,0 +1,21 @@
+MSHTML:
+<html>
+<head>
+    <Title> Pahor. M (C) Sep 2019 </Title>
+</head>
+<body BGCOLOR="#FFFFFF"LINK="#0000EE"VLINK="#551A8B"ALINK="#FF0000">
+<center>
+   <OBJECT
+      id="biohome2"
+      classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+      width=100% 
+      height=100%
+    >
+       <param NAME="Movie"VALUE="d:\Masm32\ObjAsm32\Projects\SWFplay\biohome2.swf">
+       <param NAME="Quality"VALUE="best">
+       <param NAME="SAlign"VALUE="Top">
+      <embed SRC="d:\Masm32\ObjAsm32\Projects\SWFplay\biohome2.swf"width=150 height=200 salign=top quality=best>
+    </OBJECT>
+  </center>
+</body>
+</html>
