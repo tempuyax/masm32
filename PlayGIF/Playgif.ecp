@@ -1,0 +1,40 @@
+;Do not modify this file!!!
+Easy Code 1.07.0.0009
+Begin ECProject = PlayGif
+  EasyCodeProject=0
+  FileType=0
+  Processor=.486
+  Align=4
+  DebugInfo=0
+  AsmFiles=0
+  GlobalVariables=1
+  MLOptions=/X /nologo /c /coff /Cp /Zp4
+  LinkOptions=
+  MMXOptions=0
+  CommonControls=0
+  RichEdit=0
+  PackFile=0
+  Macros=1
+  ECMacros=1
+  Unicode=0
+  Masm32Unicode=0
+  StartupWindow=Module1
+  Title=Easy Code Masm classic project
+  Resources=PlayGif.ecr
+  Module=Module1.asm
+  Module=Module2.asm
+  Module=Module3.asm
+  Include=Kernel32.inc
+  Include=User32.inc
+  Include=gdiplus.inc
+  Include=gdi32.inc
+  Include=ole32.inc
+  Include=comdlg32.inc
+  Library=Kernel32.lib
+  Library=User32.lib
+  Library=gdiplus.lib
+  Library=gdi32.lib
+  Library=ole32.lib
+  Library=comdlg32.lib
+  MiscFile=Manifest.xml
+End
