@@ -1,0 +1,44 @@
+Within the floating point data types, three sizes of real numbers are available:
+
+the 32-bit REAL4 (also called short real or single precision), 			= DWORD 4
+the 64-bit REAL8 (also called long real or double precision),  			= QWORD 8
+the 80-bit REAL10 (also called temporary real or extended precision). 	= TBYTE 16
+
+=========================================================
+The REAL4 floating point number has the following format.
+
+where: 
+S 	= sign bit (0=positive, 1=negative) 	BIT31 
+En 	= biased exponent bits  				BIT30 - BIT23
+fn 	= fraction bits of the significand		BIT22 - BIT00
+
+The 24 bits describing the number (23 bits in the significand field + 1 implied bit) 
+is approximately equivalent to 7 decimal digits.
+
+=========================================================
+The REAL8 floating point number has the following format.
+
+where: 
+S 	= sign bit (0=positive, 1=negative) 	BIT63 
+En 	= biased exponent bits  				BIT62 - BIT52
+fn 	= fraction bits of the significand		BIT51 - BIT00
+
+The 53 bits describing the number (52 bits in the significand field + 1 implied bit) 
+is approximately equivalent to 15 decimal digits.
+
+==========================================================
+The REAL10 floating point number has the following format. 
+That is the format used by the FPU's 80-bit data registers. 
+(Real numbers in this format can be stored in memory but 
+must be present in one of the FPU data registers in order
+to use them with other FPU instructions.)
+
+
+where: 
+S 	= sign bit (0=positive, 1=negative) 	BIT79 
+En 	= biased exponent bits  				BIT78 - BIT64
+1	= this bit must be 1					BIT63
+fn 	= fraction bits of the significand		BIT62 - BIT00
+
+The 64 bits of the significand describing the number is approximately equivalent to 19 decimal digits.
+

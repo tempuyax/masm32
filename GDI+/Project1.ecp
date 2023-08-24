@@ -1,0 +1,33 @@
+;Do not modify this file!!!
+Easy Code 1.07.0.0009
+Begin ECProject = Project1
+  EasyCodeProject=0
+  FileType=0
+  Processor=.486
+  Align=4
+  DebugInfo=1
+  AsmFiles=1
+  GlobalVariables=1
+  MLOptions=/X /nologo /c /coff /Cp /Zp4 /Zi /Zd
+  LinkOptions=
+  MMXOptions=0
+  CommonControls=1
+  RichEdit=1
+  PackFile=1
+  Macros=1
+  ECMacros=0
+  Unicode=0
+  Masm32Unicode=0
+  StartupWindow=Module1
+  Title=Easy Code Masm classic project
+  Resources=Project1.ecr
+  Module=Module1.asm
+  Include=Kernel32.inc
+  Include=User32.inc
+  Include=comctl32.inc
+  Include=gdiplus.inc
+  Library=Kernel32.lib
+  Library=User32.lib
+  Library=comctl32.lib
+  Library=gdiplus.lib
+End

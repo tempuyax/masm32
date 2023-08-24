@@ -1,0 +1,47 @@
+#include "Project2.h"
+
+
+
+IDD_DIALOG1 DIALOGEX DISCARDABLE 300, 0, 131, 270
+STYLE WS_POPUP|WS_VISIBLE|WS_SYSMENU|DS_CENTER
+EXSTYLE WS_EX_DLGMODALFRAME
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL	"EXIT", IDC_EXIT, "BUTTON", BS_PUSHBUTTON|BS_CENTER|WS_BORDER|WS_TABSTOP, 3, 61, 123, 18
+    CONTROL	"HIDE", IDC_HIDE, "BUTTON", BS_PUSHBUTTON|BS_CENTER|WS_BORDER|WS_TABSTOP, 71, 33, 56, 18
+    CONTROL	"END", IDC_END, "BUTTON", BS_PUSHBUTTON|BS_CENTER|WS_TABSTOP, 71, 7, 56, 18
+    CONTROL	"SHOW", IDC_SHOW, "BUTTON", BS_PUSHBUTTON|BS_CENTER|WS_TABSTOP, 3, 33, 56, 18
+    CONTROL	"START", IDC_START, "BUTTON", BS_PUSHBUTTON|BS_CENTER|WS_TABSTOP, 3, 7, 56, 18
+    CONTROL	"", IDC_INFO, "STATIC", WS_GROUP|NOT WS_TABSTOP, 6, 95, 119, 142, WS_EX_CLIENTEDGE
+    CONTROL	"", IDC_COPYRIGHT, "STATIC", WS_GROUP|NOT WS_TABSTOP, 6, 245, 119, 20
+END
+
+IDR_VERSION VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3L
+ FILEFLAGS 0x1L
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "Comments", "Programmed in assembly with Easy Code\0"
+            VALUE "CompanyName", "personal\0"
+            VALUE "FileDescription", "Easy Code classic project\0"
+            VALUE "FileVersion", "1.00.0.0001\0"
+            VALUE "InternalName", "Project2\0"
+            VALUE "LegalCopyright", "Copyright © 2010 personal\0"
+            VALUE "OriginalFilename", "Project2.exe\0"
+            VALUE "ProductName", "Project2\0"
+            VALUE "ProductVersion", "1.00.0.0001\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1252
+    END
+END
